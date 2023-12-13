@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Sportsko</title>
+    </head>
+    <body>
+
+        <section th:fragment="carousel" id="carouselExample" class="carousel slide carousel-fade d-flex align-items-center mt-5" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div th:if="${productos != null and not #lists.isEmpty(productos)}" th:each="producto, iterStat : ${productos}" class="carousel-item" th:classappend="${iterStat.index == 0} ? 'active'">
+                    <img th:src="${producto.rutaImagen}" class="d-block mx-auto rounded-circle" height="400"/>
+                    <div class="carousel-caption d-none d-md-block">
+                        <h4 th:text="${producto.nombreProducto}" class="text-light bg-dark rounded mx-5"></h4>
+                        <h5 th:text="${producto.descripcion}" class="text-light bg-dark rounded mx-5"></h5>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </section>
+
+        <!-- Fragmento Destacados -->
+        <section th:fragment="destacados" id="featured-products" style="font-family: cursive" class="mt-5">
+            <div class="container">
+                <div class="row g-4">        
+                    <div th:if="${productos != null and !productos.empty}">
+                        <!-- Título -->
+                        <div class="text-center bg-dark rounded text-light">
+                            <h2 class="inline">Productos Descatados</h2>
+                            <div id="resultsBlock"></div>
+                        </div>
+                        <!-- Listado de productos -->
+                        <div class="row row-cols-3 g-4">
+                            <div class="card" th:each="producto : ${productos}" style="background-color: white;">
+                                <figure>
+                                    <img th:src="@{${producto.rutaImagen}}" class="card-img-top rounded" height="300" alt="..."/>
+                                    <figcaption style="font-size: 24px; font-weight: bold; text-align: right;">
+                                        <a th:href="@{/producto/eliminar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a th:href="@{/producto/modificar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-pencil"></i>
+                                        </a>
+                                        $[[${producto.precio}]]
+                                    </figcaption>
+                                </figure>
+                                <div class="card-header rounded" style="background-color: coral;">
+                                    <h5 class="card-title" style="font-weight: bold;">[[${producto.nombreProducto}]]</h5>
+                                </div>
+                                <div class="card-body rounded" style="background-color: #2E3139;">
+                                    <p class="card-text text-white">[[${producto.descripcion}]]</p>
+
+                                    <div style="width: 100%;
+                                         display: flex;
+                                         justify-content: space-between;
+                                         margin-bottom: 5px;">
+                                        <div class="size">
+                                            <label class="text-white">Talla</label>
+                                            <select name="" id="">
+                                                <option value="">32</option>
+                                                <option value="">34</option>
+                                                <option value="">36</option>
+                                                <option value="">38</option>
+                                                <option value="">40</option>
+                                                <option value="">42</option>
+                                                <option value="">44</option>
+                                                <option value="">46</option>
+                                            </select>
+                                        </div>
+                                        <form class="text-white">
+                                            <!-- Campos ocultos para el formulario -->
+                                            <input type="hidden" name="idProducto" th:value="${producto.idProducto}"/>
+                                            <input type="hidden" name="existencias" th:value="${producto.existencias}"/>
+                                            <button class="btn btn-danger" id="addCar" 
+                                                    name="addCar" onclick="addCard(this.form)" 
+                                                    type="button">Agregar al Carrito</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fragmento Acerca de nosotros -->
+        <section th:fragment="acercaNosotros" id="about-us" class="bg-green-700 py-5">
+            <div class="container bs-success-border-subtle" style="background-color: whitesmoke; border-radius: 15px;" >
+                <h2 class="text-center mb-4">Acerca de Nosotros</h2>
+
+                <p>
+                    Somos Sportsko, tu destino número uno para encontrar el mejor calzado deportivo de alta calidad.
+                    Nos enorgullece ofrecer una amplia variedad de productos para hombres, mujeres y niños, diseñados
+                    para brindarte comodidad y estilo mientras te mantienes activo.
+                </p>
+
+                <h3 class="mt-4">Contactarnos</h3>
+                <p>
+                    ¡Estamos aquí para ayudarte! Si tienes alguna pregunta o inquietud, no dudes en ponerte en contacto con nuestro equipo de atención al cliente.
+                </p>
+
+                <div>
+                    <h3 class="mt-4">Nuestras Sedes</h3>
+                    <ul>
+                        <li>Sede principal: Dirección 123, Ciudad</li>
+                        <li>Sede regional 1: Dirección 456, Ciudad</li>
+                        <li>Sede regional 2: Dirección 789, Ciudad</li>
+                    </ul>
+                </div>
+
+                <div class="p-2">
+                    <h3>Redes Sociales</h3>
+                    <a href="https://www.instagram.com/" target="_blank" class="text-dark">
+                        <i class="fab fa-instagram fa-2x"></i>
+                    </a>
+                    <a href="https://twitter.com/" target="_blank" class="text-dark ml-md-2">
+                        <i class="fab fa-facebook fa-2x"></i>
+                    </a>
+                    <a href="https://www.facebook.com/" target="_blank" class="text-dark ml-md-2">
+                        <i class="fab fa-twitter fa-2x"></i> 
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Ventana Modal para agregar usuario -->
+        <section th:fragment="agregarUsuario">
+            <div id="agregarUsuario" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-theme="dark">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-subtle text-white">
+                            <h5 class="modal-title">Crear Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div> 
+                        <form th:action="@{/usuario/guardar}" th:object="${usuario}" method="POST" class="was-validated" enctype="multipart/form-data">
+                            <div class="modal-body text-white">
+                                <div class="mb-3">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" class="form-control" name="nombre" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="apellido">Apellido</label>
+                                    <input type="text" class="form-control" name="apellido" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correoElectronico">Correo Electrónico</label>
+                                    <input type="email" class="form-control" name="correoElectronico" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contrasena">Contraseña</label>
+                                    <input type="password" class="form-control" name="contrasena" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="direccion">Dirección</label>
+                                    <input type="text" class="form-control" name="direccion" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefono">Teléfono</label>
+                                    <input type="number" class="form-control" name="telefono" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="aceptaTerminos">Acepta Términos y Condiciones</label>
+                                    <input class="form-check-input" type="checkbox" name="aceptaTerminos" id="aceptaTerminos" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="recibirNotificaciones">Desea Recibir Notificaciones?</label>
+                                    <input class="form-check-input" type="checkbox" name="recibirNotificaciones" id="recibirNotificaciones" required="true"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="submit">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Ventana Modal para iniciar sesión -->
+        <section th:fragment="iniciarSesion">
+            <div id="iniciarSesion" class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-theme="dark">
+                <div class="modal-dialog modal-sm"> <!-- Cambiado a modal-sm para hacerla más compacta -->
+                    <div class="modal-content">
+                        <div class="modal-header bg-subtle text-white">
+                            <h5 class="modal-title">Iniciar Sesión</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div> 
+                        <form th:action="@{/usuario/iniciar-sesion}" method="POST" class="was-validated">
+                            <div class="modal-body text-white">
+                                <div class="mb-3">
+                                    <label for="correoElectronico">Correo Electrónico</label>
+                                    <input type="email" class="form-control" name="correoElectronico" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contrasena">Contraseña</label>
+                                    <input type="password" class="form-control" name="contrasena" required="true"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="submit">Iniciar Sesión</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

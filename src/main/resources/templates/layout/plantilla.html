@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="head">
+        <title>Sportsko</title>
+        <meta charset="UTF-8"/>
+        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+        <script th:src="@{/js/rutinas.js}"></script>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <style>
+            body {
+                background-image: url(https://i.redd.it/5oxq3tjlfo821.jpg);
+                background-size: cover;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header th:fragment="header" class="header">
+            <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+                <div class="container">
+                    <!-- Logo -->
+                    <a th:href="@{/}" class="navbar-brand">
+                        Sportsko
+                    </a>
+
+                    <!-- Menú de navegación -->
+                    <div class="collapse navbar-collapse">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/paginas/listado}">Hombres</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/paginas/listado2}">Mujeres</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/paginas/listado3}">Niños</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Barra de búsqueda -->
+                    <div class="nav justify-content-center">
+                        <form class="d-flex" role="search" th:action="@{/busqueda/listado}" method="get">
+                            <input class="form-control me-2" type="search" name="q" placeholder="Buscar" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">Buscar</button>
+                        </form>
+                    </div>
+                    <!-- Icono de carrito -->
+                    <div class="nav justify-content-center">
+                        <a class="nav-link text-light" th:href="@{/carrito/listado}">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    </div>
+                    <!-- Menú de administrador -->
+                    <div class="collapse navbar-collapse justify-content-between">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a class="nav-link dropdown-toggle" 
+                                   data-bs-toggle="dropdown" 
+                                   href="#" 
+                                   role="button" 
+                                   aria-expanded="false">Administracion</a>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item"  th:href="@{/categoria/listado}">Admin Categorias</a></li>
+                                    <li><a class="dropdown-item"  th:href="@{/producto/listado}">Admin Productos</a></li>
+                                    <li><a class="dropdown-item"  th:href="@{/usuario/listado}">Admin Usuarios</a></li>
+                                    <li><a class="dropdown-item"  th:href="@{/reportes/principal}">Reportes</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item px-2" sec:authorize='!isAuthenticated()'>
+                                <a class="nav-link"  th:href="@{/login}">
+                                    <i class="fas fa-sign-in-alt"></i> LOGIN
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item text-white my-auto" sec:authorize='isAuthenticated()'>
+                                <img th:src='@{${session.usuarioImagen}}'
+                                     height="40"
+                                     class="rounded-circle"/>
+                                <span sec:authentication='name' th:text="${#strings.capitalize(#authentication.principal.username)}">Jhon</span>
+                            </li>
+                            <li class="nav-item text-white my-auto" sec:authorize='isAuthenticated()'>
+                                <form method="post" th:action="@{/logout}">
+                                    <button class="btn btn-dark">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <footer th:fragment="footer" class="text-white mt-5 p-2" style="background-color: #2E3139;" data-bs-theme="dark">
+            <div class="container">
+                <div class="col">
+                    <p class="lead text-center">
+                        &COPY; 2023 Sportsko. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+    </body>
+</html>

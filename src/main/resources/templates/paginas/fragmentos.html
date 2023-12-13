@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Sportsko</title>
+    </head>
+    <body> 
+        <!-- Fragmento Articulos Hombres-->
+        <section th:fragment="listadoProductosH" id="productosH" style="font-family: cursive" class="mt-5">
+            <div class="container">
+                <div class="row g-4">        
+                    <div th:if="${productos != null and !productos.empty}">
+                        <!-- Título -->
+                        <div class="text-center bg-dark rounded text-light">
+                            <h2 class="inline">Seccion Hombres</h2>
+                            <div id="resultsBlock"></div>
+                        </div>
+                        <!-- Listado de productos -->
+                        <div class="row row-cols-3 g-4">
+                            <div class="card" th:each="producto : ${productos}" style="background-color: white;">
+                                <figure>
+                                    <img th:src="@{${producto.rutaImagen}}" class="card-img-top rounded" height="300" alt="..."/>
+                                    <figcaption style="font-size: 24px; font-weight: bold; text-align: right;">
+                                        <a th:href="@{/producto/eliminar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a th:href="@{/producto/modificar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-pencil"></i>
+                                        </a>
+                                        $[[${producto.precio}]]
+                                    </figcaption>
+                                </figure>
+                                <div class="card-header rounded" style="background-color: forestgreen;">
+                                    <h5 class="card-title" style="font-weight: bold;">[[${producto.nombreProducto}]]</h5>
+                                </div>
+                                <div class="card-body rounded" style="background-color: #2E3139;">
+                                    <p class="card-text text-white">[[${producto.descripcion}]]</p>
+
+                                    <div style="width: 100%;
+                                         display: flex;
+                                         justify-content: space-between;
+                                         margin-bottom: 5px;">
+                                        <div class="size">
+                                            <label class="text-white">Talla</label>
+                                            <select name="" id="">
+                                                <option value="">32</option>
+                                                <option value="">34</option>
+                                                <option value="">36</option>
+                                                <option value="">38</option>
+                                                <option value="">40</option>
+                                                <option value="">42</option>
+                                                <option value="">44</option>
+                                                <option value="">46</option>
+                                            </select>
+                                        </div>
+                                        <form class="text-white">
+                                            <!-- Campos ocultos para el formulario -->
+                                            <input type="hidden" name="idProducto" th:value="${producto.idProducto}"/>
+                                            <input type="hidden" name="existencias" th:value="${producto.existencias}"/>
+                                            <button class="btn btn-success" id="addCar" 
+                                                    name="addCar" onclick="addCard(this.form)" 
+                                                    type="button">Agregar al Carrito</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+         <!-- Fragmento Articulos Mujeres-->
+        <section th:fragment="listadoProductosM" id="productosM" style="font-family: cursive" class="mt-5">
+            <div class="container">
+                <div class="row g-4">        
+                    <div th:if="${productos != null and !productos.empty}">
+                        <!-- Título -->
+                        <div class="text-center bg-dark rounded text-light">
+                            <h2 class="inline">Seccion Mujeres</h2>
+                            <div id="resultsBlock"></div>
+                        </div>
+                        <!-- Listado de productos -->
+                        <div class="row row-cols-3 g-4">
+                            <div class="card" th:each="producto : ${productos}" style="background-color: white;">
+                                <figure>
+                                    <img th:src="@{${producto.rutaImagen}}" class="card-img-top rounded" height="300" alt="..."/>
+                                    <figcaption style="font-size: 24px; font-weight: bold; text-align: right;">
+                                        <a th:href="@{/producto/eliminar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a th:href="@{/producto/modificar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-pencil"></i>
+                                        </a>
+                                        $[[${producto.precio}]]
+                                    </figcaption>
+                                </figure>
+                                <div class="card-header rounded" style="background-color: darksalmon;">
+                                    <h5 class="card-title" style="font-weight: bold;">[[${producto.nombreProducto}]]</h5>
+                                </div>
+                                <div class="card-body rounded" style="background-color: #2E3139;">
+                                    <p class="card-text text-white">[[${producto.descripcion}]]</p>
+
+                                    <div style="width: 100%;
+                                         display: flex;
+                                         justify-content: space-between;
+                                         margin-bottom: 5px;">
+                                        <div class="size">
+                                            <label class="text-white">Talla</label>
+                                            <select name="" id="">
+                                                <option value="">32</option>
+                                                <option value="">34</option>
+                                                <option value="">36</option>
+                                                <option value="">38</option>
+                                                <option value="">40</option>
+                                                <option value="">42</option>
+                                                <option value="">44</option>
+                                                <option value="">46</option>
+                                            </select>
+                                        </div>
+                                        <form class="text-white">
+                                            <!-- Campos ocultos para el formulario -->
+                                            <input type="hidden" name="idProducto" th:value="${producto.idProducto}"/>
+                                            <input type="hidden" name="existencias" th:value="${producto.existencias}"/>
+                                            <button class="btn btn-danger" id="addCar" 
+                                                    name="addCar" onclick="addCard(this.form)" 
+                                                    type="button">Agregar al Carrito</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+         
+          <!-- Fragmento Articulos Ninos-->
+        <section th:fragment="listadoProductosK" id="productosK" style="font-family: cursive" class="mt-5">
+            <div class="container">
+                <div class="row g-4">        
+                    <div th:if="${productos != null and !productos.empty}">
+                        <!-- Título -->
+                        <div class="text-center bg-dark rounded text-light">
+                            <h2 class="inline">Seccion Niños</h2>
+                            <div id="resultsBlock"></div>
+                        </div>
+                        <!-- Listado de productos -->
+                        <div class="row row-cols-3 g-4">
+                            <div class="card" th:each="producto : ${productos}" style="background-color: white;">
+                                <figure>
+                                    <img th:src="@{${producto.rutaImagen}}" class="card-img-top rounded" height="300" alt="..."/>
+                                    <figcaption style="font-size: 24px; font-weight: bold; text-align: right;">
+                                        <a th:href="@{/producto/eliminar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        <a th:href="@{/producto/modificar/}+${producto.idProducto}" sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <i class="fas fa-pencil"></i>
+                                        </a>
+                                        $[[${producto.precio}]]
+                                    </figcaption>
+                                </figure>
+                                <div class="card-header rounded" style="background-color: darkcyan;">
+                                    <h5 class="card-title" style="font-weight: bold;">[[${producto.nombreProducto}]]</h5>
+                                </div>
+                                <div class="card-body rounded" style="background-color: #2E3139;">
+                                    <p class="card-text text-white">[[${producto.descripcion}]]</p>
+
+                                    <div style="width: 100%;
+                                         display: flex;
+                                         justify-content: space-between;
+                                         margin-bottom: 5px;">
+                                        <div class="size">
+                                            <label class="text-white">Talla</label>
+                                            <select name="" id="">
+                                                <option value="">26</option>
+                                                <option value="">28</option>
+                                                <option value="">30</option>
+                                                <option value="">32</option>
+                                                <option value="">34</option>
+                                                <option value="">36</option>
+                                            </select>
+                                        </div>
+                                        <form class="text-white">
+                                            <!-- Campos ocultos para el formulario -->
+                                            <input type="hidden" name="idProducto" th:value="${producto.idProducto}"/>
+                                            <input type="hidden" name="existencias" th:value="${producto.existencias}"/>
+                                            <button class="btn btn-primary" id="addCar" 
+                                                    name="addCar" onclick="addCard(this.form)" 
+                                                    type="button">Agregar al Carrito</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

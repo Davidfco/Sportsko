@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Sportsko</title>
+    </head>
+    <body> 
+        <!-- Fragmento Busqueda-->
+        <section th:fragment="resultadoBusqueda" id="resultadoBusqueda">
+            <div class="container">
+                <div th:if="${productoBuscado != null}">
+                    <div class="card" style="background-color: dimgray;">
+                        <figure>
+                            <img th:src="${productoBuscado.rutaImagen}" class="card-img-top" height="200" alt="..."/>
+                                <figcaption>
+                                    $[[${productoBuscado.precio}+' ('+${productoBuscado.existencias}+')']]
+                                    <a th:href="@{/producto/eliminar/}+${productoBuscado.idProducto}">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <a th:href="@{/producto/modificar/}+${productoBuscado.idProducto}">
+                                        <i class="fas fa-pencil"></i>
+                                    </a>
+                                </figcaption>
+                        </figure>
+                        <div class="card-header" style="background-color: whitesmoke;">
+                            <h5 class="card-title">[[${productoBuscado.nombreProducto}]]</h5>
+                        </div>
+                        <div class="card-body" style="background-color: #2E3139;">
+                            <p class="card-text text-white">[[${productoBuscado.descripcion}]]</p>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${productoBuscado == null}">
+                    <p>No se encontraron resultados.</p>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>
